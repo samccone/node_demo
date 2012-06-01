@@ -1,1 +1,6 @@
 an introduction to node.js and express
+
+to run
+
+$ npm install
+$ node server
