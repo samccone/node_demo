@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>reveal.js</title>
+
+		<meta name="description" content="An easy to use CSS 3D slideshow tool for quickly creating good looking HTML presentations.">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/main.css">
+		<link rel="stylesheet" href="css/print.css" type="text/css" media="print">
+
+		<link rel="stylesheet" href="lib/zenburn.css">
+	</head>
+
+	<body>
+
+		<div id="reveal">
+
+			<!-- Used to fade in a background when a specific slide state is reached -->
+			<div class="state-background"></div>
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>NODE.js</h1>
+					<h3 class="inverted">not your mothers JS</h3>
+					<script>
+						// Delicously hacky. Look away.
+						if( navigator.userAgent.match( /(iPhone|iPad|iPod|Android)/i ) ) document.write( '<p style="color: rgba(0,0,0,0.3); text-shadow: none;">('+'Tap to navigate'+')</p>' );
+					</script>
+				</section>
+				<section>
+					<h3 > dont be scared </h3>
+					<img class="fragment" width="500px" src="http://static.fjcdn.com/gifs/This_4ddbd4_785953.gif"/>
+				</section>
+				<section>
+					<h2>Getting Going</h2>
+					<p>
+						We are going to use <a href="http://expressjs.com/" target="_blank"><img style="border: 0px; background:transparent; box-shadow: 0px 0px 0px transparent; top: 20px; position: relative;" src="http://expressjs.com/images/logo.png"/></a> </br> and <a href="http://npmjs.org/" target="_blank"><img height="50px" style="border: 0px; background:transparent; box-shadow: 0px 0px 0px transparent; top: 20px; position: relative;" src="http://npmjs.org/npm.png"/></a> to make our lives quite a bit easier
+					</p>
+				</section>
+					<section>
+						<h2>Lets set up our packages</h2>
+						<p>
+							<i> package.json </i>
+							<pre><code contenteditable>
+{
+  "name" : "node_demo",
+  "version" : "0.0.1",
+  "dependencies" : {
+    "express" : "latest",
+    "jade" : "latest"
+  }
+}</code></pre>
+
+				</section>
+<section>
+	<h2>Now Our Server!</h2>
+	<pre> <code>
+		var express   = require('express');
+		var webServer = express.createServer();
+
+		webServer.get('/', function(req, res){
+		  res.send('Hello Internet!');
+		});
+		webServer.listen('3000');
+	</code>
+</pre>
+	<h4> Easy right! </h4>
+</section>
+<section>
+	<section>
+			<h1> VIEWS! </h1>
+	</section>
+	<section>
+		<h1> JADE </h1>
+		<p> we are going to use <a href="http://jade-lang.com/" target="_blank">JADE</a> </br> It's a templating langage great for node! </p>
+	</section>
+	<section>
+				<h2> Setting it up </h2>
+				<pre><code>
+webServer.set('view engine', 'jade');
+				</code></pre>
+				<i> yup it is that easy</i>
+	</section>
+	<section>
+		<h1> lets make some pages</h1>
+		<ol style="width: 400px">
+			<li class='fragment'>layout.jade
+			<pre><code>
+!!!
+head
+body
+  h1 An Awesome Site in Node!
+  !=body
+			</code></pre></li>
+			<li class='fragment'>index.jade
+			<pre><code>
+h3 INDEX!!!
+			</code></pre></li>
+		</ol>
+	</section>
+</section>
+<section>
+	<section>
+		<img src="http://i.imgur.com/moPOi.png" style="position:relative;top:-50px"/>
+	</section>
+	<section>
+		<h2> super super simple routes </h2>
+		<pre><code>
+webServer.get('/', function(req, res){
+  res.render('index');
+});
+		</pre></code>
+	</section>
+</section>
+<section>
+	<section>
+			<h2> install the packages </h2>
+				<pre><code>
+$ npm install
+</code></pre>
+</section>
+	<section>
+	<h2> boot it up! </h2>
+	<pre><code>
+		$ node server.js
+	</code></pre>
+	</section>
+</section>
+<section>
+	<h1> lets make something! </h1>
+</section>
+				<section>
+					<h3>models/Meme.js</h3>
+					<pre><code>
+var memes = [];
+
+var create = function(vals, cb) {
+  memes.push({
+    name: vals.title,
+    link: vals.link
+  });
+  cb(memes[memes.length -1])
+}
+
+var get = function(id) {
+  if (id) {
+    return memes[id];
+  }
+  return memes;
+}
+
+exports.get         = get;
+exports.create      = create;
+</code></pre>
+				</section>
+				<section>
+					<h3> some new pages </h3>
+					<pre class="fragment"> views/meme/index.jade <code>
+h2 all memes
+- for( var i =0; i < memes.length; ++i )
+  h4= memes[i].name
+  img(src="#{memes[i].link}");
+br
+a(href="/meme/new") add a new Meme</code></pre>
+					<pre class="fragment"> views/meme/new.jade <code>
+form(action="", METHOD="POST")
+  label(for="title") Name of the Meme
+  br
+  input(name="title", type="text", placeholder="enter the title of the meme")
+  br
+  label(for="link") Link to the meme
+  br
+  input(name="link", type="text", placeholder="enter the link to the meme")
+  br
+  input(type="submit")
+					</code> </pre>
+
+					</section>
+					<section>
+						<h3> routes .. utils .. local vars </h3>
+						<pre class="fragment"><code>
+var Meme      = require('./models/Meme.js'); //require our model
+
+webServer.use(express.bodyParser()); // this will let us get the POST vars out of the request
+
+webServer.get('/meme', function(req, res){
+  res.render('meme', {'memes': Meme.get()});
+});
+
+webServer.get('/meme/new', function(req, res){
+  res.render('meme/new');
+});
+
+webServer.post('/meme/new', function(req, res){
+  Meme.create(req.body, function(){
+    res.redirect('/meme');
+  });
+});
+						</code> </pre>
+					</section>
+					<section>
+						<h2> Boot it up and enjoy! </h2>
+						<p>
+							<b> just goto <a href="http://0.0.0.0:3000/meme/" target="_blank">http://0.0.0.0:3000/meme/</a></b>
+					</section>
+				<section>
+					<h1>THE END</h1>
+					<i>By Sam Saccone</i>
+					 at <a href="http://mojotech.com" target="_blank"><img style="border: 0px; background:transparent; box-shadow: 0px 0px 0px transparent;  position: relative;" src="http://www.mojotech.com/assets/header-m.png" /> </a></br>
+					<small style="margin-top: 50px; margin-bottom: 100px; display: inline-block"><a href="https://twitter.com/samccone">Follow @samccone</a></small> </br>
+					<small>get the code on <a href="https://github.com/samccone/node_demo" target="_blank"> GITHUB </a></small>
+
+				</section>
+			</div>
+
+			<!-- The navigational controls UI -->
+			<aside class="controls">
+				<a class="left" href="#">&#x25C4;</a>
+				<a class="right" href="#">&#x25BA;</a>
+				<a class="up" href="#">&#x25B2;</a>
+				<a class="down" href="#">&#x25BC;</a>
+			</aside>
+
+			<!-- Displays presentation progress, max value changes via JS to reflect # of slides -->
+			<div class="progress"><span></span></div>
+
+		</div>
+
+		<script src="js/reveal.js"></script>
+
+		<!-- Optional libraries for code syntax highlighting and classList support in IE9 -->
+		<script src="lib/highlight.js"></script>
+		<script src="lib/classList.js"></script>
+
+		<script>
+			// Parse the query string into a key/value object
+			var query = {};
+			location.search.replace( /[A-Z0-9]+?=(\w*)/gi, function(a) {
+				query[ a.split( '=' ).shift() ] = a.split( '=' ).pop();
+			} );
+
+			// Fires when a slide with data-state=customevent is activated
+			Reveal.addEventListener( 'customevent', function() {
+				alert( '"customevent" has fired' );
+			} );
+
+			// Fires each time a new slide is activated
+			Reveal.addEventListener( 'slidechanged', function( event ) {
+				// event.indexh & event.indexv
+			} );
+
+			Reveal.initialize({
+				// Display controls in the bottom right corner
+				controls: true,
+
+				// Display a presentation progress bar
+				progress: true,
+
+				// If true; each slide will be pushed to the browser history
+				history: true,
+
+				// Loops the presentation, defaults to false
+				loop: false,
+
+				// Flags if mouse wheel navigation should be enabled
+				mouseWheel: true,
+
+				// Apply a 3D roll to links on hover
+				rollingLinks: true,
+
+				// UI style
+				theme: query.theme || 'default', // default/neon
+
+				// Transition style
+				transition: query.transition || 'default' // default/cube/page/concave/linear(2d)
+			});
+
+			hljs.initHighlightingOnLoad();
+		</script>
+
+	</body>
+</html>
